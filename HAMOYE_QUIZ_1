@@ -1,0 +1,250 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "private_outputs": true,
+      "provenance": [],
+      "authorship_tag": "ABX9TyPPsWdXK/JMcXHZhwDjaCZr",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/The-Algorist/Machine_Learning/blob/main/HAMOYE_QUIZ_1\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "E1TQpRtneaus"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df = pd.read_csv(\"/content/FoodBalanceSheets_E_Africa_NOFLAG.csv\", encoding = \"latin-1\")\n",
+        "df.head()"
+      ],
+      "metadata": {
+        "id": "uAXY-iTRgUJX"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.shape"
+      ],
+      "metadata": {
+        "id": "Zvp5x3cvgy8F"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "# Perform groupby on 'Element' and calculate the sum of 'Processing' in 2017\n",
+        "sum_processing_2017 = df[df['Y2017'] > 0].groupby('Element')['Y2017'].sum()['Processing']\n",
+        "\n",
+        "print(sum_processing_2017)\n"
+      ],
+      "metadata": {
+        "id": "pc9CBWNmhNmF"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Perform groupby on 'Element' and calculate the sum of 'Stock Variation' for each element\n",
+        "sum_stock_variation = df.groupby('Element')[['Y2014', 'Y2015', 'Y2016', 'Y2017', 'Y2018']].sum()\n",
+        "\n",
+        "# Find the year with the highest sum of 'Stock Variation' across all elements\n",
+        "highest_sum_year = sum_stock_variation.sum(axis=0).idxmax()\n",
+        "\n",
+        "print(highest_sum_year)"
+      ],
+      "metadata": {
+        "id": "oy3_WaEvh3aD"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Select columns 'Y2017' and 'Area', perform groupby on 'Area', and calculate the sum for each area\n",
+        "sum_by_area = df.groupby('Area')['Y2017'].sum()\n",
+        "\n",
+        "# Find the area with the highest sum in 2017\n",
+        "area_highest_sum = sum_by_area.idxmax()\n",
+        "\n",
+        "print(area_highest_sum)"
+      ],
+      "metadata": {
+        "id": "KodvR4XFiGxZ"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Perform groupby sum aggregation on 'Item' column\n",
+        "sum_by_item = df.groupby('Item')[['Y2015', 'Y2018']].sum()\n",
+        "\n",
+        "# Retrieve the sum of Wine produced in 2015 and 2018\n",
+        "wine_sum_2015 = sum_by_item.loc['Wine', 'Y2015']\n",
+        "wine_sum_2018 = sum_by_item.loc['Wine', 'Y2018']\n",
+        "\n",
+        "print(\"Total Wine production in 2015:\", wine_sum_2015)\n",
+        "print(\"Total Wine production in 2018:\", wine_sum_2018)"
+      ],
+      "metadata": {
+        "id": "JGIegTNSizDl"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Calculate the mean and standard deviation for the year 2017\n",
+        "mean_2017 = df['Y2017'].mean()\n",
+        "std_2017 = df['Y2017'].std()\n",
+        "\n",
+        "# Round the values to 2 decimal places\n",
+        "mean_2017 = round(mean_2017, 2)\n",
+        "std_2017 = round(std_2017, 2)\n",
+        "\n",
+        "print(\"Mean for 2017:\", mean_2017)\n",
+        "print(\"Standard Deviation for 2017:\", std_2017)"
+      ],
+      "metadata": {
+        "id": "KEatEfR-jBoB"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "correlation_df = df[['Element Code', 'Y2014', 'Y2015', 'Y2016', 'Y2017', 'Y2018']]\n",
+        "\n",
+        "# Exclude 'Element Code' from correlation calculation\n",
+        "correlation_df = correlation_df.drop('Element Code', axis=1)\n",
+        "\n",
+        "# Calculate the correlation between columns\n",
+        "correlation = correlation_df.corr()\n",
+        "\n",
+        "# Find the year with the least correlation to other columns\n",
+        "least_correlated_year = correlation.abs().sum().idxmin()\n",
+        "\n",
+        "print(\"Year with the least correlation to other columns:\", least_correlated_year)\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "SRB_8UUmjSuS"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Assuming your DataFrame is named 'df' and the column for 2014 is named 'Y2014'\n",
+        "missing_data_count = df['Y2014'].isnull().sum()\n",
+        "total_data_points = len(df['Y2014'])\n",
+        "\n",
+        "missing_data_percentage = (missing_data_count / total_data_points) * 100\n",
+        "\n",
+        "print(\"Total number of missing data in 2014:\", missing_data_count)\n",
+        "print(\"Percentage of missing data in 2014:\", round(missing_data_percentage, 3), \"%\")"
+      ],
+      "metadata": {
+        "id": "cNIY_3-1kBxh"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "result = df.groupby('Area')['Y2017'].sum().sort_values().reset_index()\n",
+        "\n",
+        "seventh_lowest_area = result.loc[6, 'Area']\n",
+        "seventh_lowest_sum = result.loc[6, 'Y2017']\n",
+        "\n",
+        "print(\"Area with the 7th lowest sum in 2017:\", seventh_lowest_area)\n",
+        "print(\"Sum in 2017 for the 7th lowest area:\", seventh_lowest_sum)"
+      ],
+      "metadata": {
+        "id": "wp1CTdIUmoq3"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "total_unique_countries = df['Area'].nunique()\n",
+        "\n",
+        "print(\"Total number of unique countries in the dataset:\", total_unique_countries)"
+      ],
+      "metadata": {
+        "id": "nl4G4GvNm1Dn"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "element = 'Protein supply quantity (g/capita/day)'\n",
+        "\n",
+        "filtered_data = df[(df['Area'] == area) & (df['Element'] == element)]\n",
+        "protein_supply_2015 = filtered_data['Y2015'].sum()\n",
+        "\n",
+        "print(\"Total Protein supply quantity in Madagascar in 2015:\", protein_supply_2015)"
+      ],
+      "metadata": {
+        "id": "eYSWFzwbnDRu"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "5plrJ0ZupAwN"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
